@@ -11,30 +11,29 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
       - name: Configure AWS credentials
-        uses: aws-actions/configure-aws-credentials@v1
+        uses: aws-actions/configure-aws-credentials@v2
         with:
-          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
-          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          role-to-assume: ${{ env.AWS_IAM_ROLE_ARN }}
           aws-region: ${{ vars.AWS_REGION }}
       
-
       - name: Deployment version
         run: |
           echo "Deploying version: ${{ github.sha }}"
       
-      - name: Authenticate with Amazon ECR
-        run: |
-          aws ecr get-login-password --region ${{ vars.AWS_REGION }} | docker login --username AWS --password-stdin ${{ vars.ECR_REPO_URL }}
-  
+      - name: Login to Amazon ECR
+        id: login-ecr
+        uses: aws-actions/amazon-ecr-login@v1
 
-      - name: Build and push Docker image
-        run: |          
+      - name: Build, tag, and push Docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: asset-mappr
+          IMAGE_TAG: "${{ github.sha }} | cut -c 1-7"
+        run: |
           cd simple-app
-          SHORT_SHA=$(echo ${{ github.sha }} | cut -c 1-7)
-          docker build -t "${{ vars.ECR_REPO }}:FE_$SHORT_SHA" .
-          docker tag "${{ vars.ECR_REPO }}:FE_$SHORT_SHA" "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:FE_$SHORT_SHA"
-          docker push "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:FE_$SHORT_SHA"
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
