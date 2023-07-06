@@ -12,10 +12,8 @@ ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
 
 # Install project dependencies
-# RUN npm ci --production --> Requires package-lock.json from same node version.
 RUN npm install
-RUN npm install webpack --save
-
+RUN npm install webpack --save-dev
 
 # Copy the project
 COPY . .
