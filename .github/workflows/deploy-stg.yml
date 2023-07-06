@@ -20,6 +20,7 @@ jobs:
           aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY }}
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
+      
 
       - name: Deployment version
         run: |
@@ -28,6 +29,7 @@ jobs:
       - name: Build and push Docker image
         run: |          
           cd simple-app
-          docker build -t "asset-mappr:latest" .
-          docker tag "asset-mappr:latest" "${{ vars.ECR_REPO_URL }}/asset-mappr:latest"
-          docker push "${{ vars.ECR_REPO_URL }}/asset-mappr:latest"
+          aws ecr get-login-password --region ${{ vars.AWS_REGION }} | docker login --username AWS --password-stdin ${{ vars.ECR_REPO_URL }}
+          docker build -t "${{ vars.ECR_REPO }}:latest" .
+          docker tag "${{ vars.ECR_REPO }}:latest" "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:latest"
+          docker push "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:latest"
