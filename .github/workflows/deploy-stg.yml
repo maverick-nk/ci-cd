@@ -20,6 +20,13 @@ jobs:
           aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
           aws-region: ${{ vars.AWS_REGION }}
 
-      - name: Build and push Docker image
+      - name: Deployment version
         run: |
           echo "Deploying version: ${{ github.sha }}"
+
+      - name: Build and push Docker image
+        run: |
+          DOCKER_IMAGE_NAME = "ci-cd_${{ github.sha }}"
+          pwd
+          cd simple-app
+          docker build -t DOCKER_IMAGE_NAME .
