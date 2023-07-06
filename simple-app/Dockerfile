@@ -1,5 +1,5 @@
 # Use an official Node.js 
-FROM node:14-alpine as build
+FROM node:14 as build
 
 # Set the working directory 
 WORKDIR /app
@@ -13,7 +13,7 @@ ENV NODE_ENV $NODE_ENV
 
 # Install project dependencies
 RUN npm install
-RUN npm install webpack --save-dev
+RUN npm install -g webpack
 
 # Copy the project
 COPY . .
