@@ -29,3 +29,5 @@ jobs:
         run: |          
           cd simple-app
           docker build -t "simple-app:${{ github.sha }}" .
+          docker tag "simple-app:${{ github.sha }}" "${{ vars.ECR_REPO_URL }}/simple-app:${{ github.sha }}"
+          docker push "${{ vars.ECR_REPO_URL }}/simple-app:${{ github.sha }}"
