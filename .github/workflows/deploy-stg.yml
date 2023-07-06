@@ -35,6 +35,6 @@ jobs:
         run: |          
           cd simple-app
           SHORT_SHA=$(echo ${{ github.sha }} | cut -c 1-7)
-          docker build -t "${{ vars.ECR_REPO }}:$SHORT_SHA" .
-          docker tag "${{ vars.ECR_REPO }}:$SHORT_SHA" "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:$SHORT_SHA"
-          docker push "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:$SHORT_SHA"
+          docker build -t "${{ vars.ECR_REPO }}:FE_$SHORT_SHA" .
+          docker tag "${{ vars.ECR_REPO }}:FE_$SHORT_SHA" "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:FE_$SHORT_SHA"
+          docker push "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:FE_$SHORT_SHA"
