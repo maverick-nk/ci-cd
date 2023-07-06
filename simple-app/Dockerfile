@@ -13,8 +13,9 @@ ENV NODE_ENV $NODE_ENV
 
 # Install project dependencies
 # RUN npm ci --production --> Requires package-lock.json from same node version.
-# RUN npm install
-RUN npm ci --production
+RUN npm install
+RUN npm install webpack --save
+
 
 # Copy the project
 COPY . .
