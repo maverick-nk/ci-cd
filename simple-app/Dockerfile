@@ -8,8 +8,8 @@ WORKDIR /app
 COPY package*.json ./
 
 # Defaults to production, docker-compose overrides this to development on build and run.
-ARG NODE_ENV=production
-ENV NODE_ENV $NODE_ENV
+# ARG NODE_ENV=production
+# ENV NODE_ENV $NODE_ENV
 
 # Install project dependencies
 # RUN npm ci --production --> Requires package-lock.json from same node version.
