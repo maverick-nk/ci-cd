@@ -13,7 +13,7 @@ ENV NODE_ENV $NODE_ENV
 
 # Install project dependencies
 RUN npm install
-RUN npm install -g webpack
+RUN npm install -g webpack webpack-cli
 
 # Copy the project
 COPY . .
