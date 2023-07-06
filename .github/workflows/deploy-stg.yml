@@ -26,7 +26,6 @@ jobs:
           echo "Deploying version: ${{ github.sha }}"
 
       - name: Build and push Docker image
-        run: |
-          pwd
+        run: |          
           cd simple-app
           docker build -t "ci-cd_${{ github.sha }}" .
