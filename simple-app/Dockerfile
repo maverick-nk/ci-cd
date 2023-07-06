@@ -7,13 +7,13 @@ WORKDIR /app
 # Copy package*.json
 COPY package*.json ./
 
+# Install project dependencies
+RUN npm install
+# RUN npm install -g webpack webpack-cli html-webpack-plugin
+
 # Defaults to production
 ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
-
-# Install project dependencies
-RUN npm install
-RUN npm install -g webpack webpack-cli
 
 # Copy the project
 COPY . .
