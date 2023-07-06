@@ -1,0 +1,19 @@
+name: Production - Deploy to EC2
+
+on:
+  release:
+    types: [published]
+
+jobs:
+  deploy:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+      
+      - name: Exit for pre-release
+        if:  github.event.release.prerelease == true
+        run: |
+          echo "Pre-release, exiting!"
+          exit 0
