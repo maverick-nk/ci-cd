@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - 'release/stg/**'
+      - 'main'
 
 jobs:
   deploy:
@@ -26,7 +27,6 @@ jobs:
 
       - name: Build and push Docker image
         run: |
-          DOCKER_IMAGE_NAME = "ci-cd_${{ github.sha }}"
           pwd
           cd simple-app
-          docker build -t DOCKER_IMAGE_NAME .
+          docker build -t "ci-cd_${{ github.sha }}" .
