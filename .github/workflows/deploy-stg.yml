@@ -25,11 +25,15 @@ jobs:
       - name: Deployment version
         run: |
           echo "Deploying version: ${{ github.sha }}"
+      
+      - name: Authenticate with Amazon ECR
+        run: |
+          aws ecr get-login-password --region ${{ vars.AWS_REGION }} | docker login --username AWS --password-stdin ${{ vars.ECR_REPO_URL }}
+  
 
       - name: Build and push Docker image
         run: |          
           cd simple-app
-          aws ecr get-login-password --region ${{ vars.AWS_REGION }} | docker login --username AWS --password-stdin ${{ vars.ECR_REPO_URL }}
-          docker build -t "${{ vars.ECR_REPO }}:latest" .
-          docker tag "${{ vars.ECR_REPO }}:latest" "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:latest"
-          docker push "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:latest"
+          docker build -t "${{ vars.ECR_REPO }}:${{ github.sha }}" .
+          docker tag "${{ vars.ECR_REPO }}:${{ github.sha }}" "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:${{ github.sha }}"
+          docker push "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:${{ github.sha }}"
