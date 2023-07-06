@@ -28,4 +28,4 @@ jobs:
       - name: Build and push Docker image
         run: |          
           cd simple-app
-          docker build -t "ci-cd_${{ github.sha }}" .
+          docker build -t "simple-app:${{ github.sha }}" .

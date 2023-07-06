@@ -7,14 +7,14 @@ WORKDIR /app
 # Copy package*.json
 COPY package*.json ./
 
-# Defaults to production, docker-compose overrides this to development on build and run.
+# Defaults to production
 ARG NODE_ENV=production
 ENV NODE_ENV $NODE_ENV
 
 # Install project dependencies
 # RUN npm ci --production --> Requires package-lock.json from same node version.
-RUN npm install
-RUN npm install webpack
+# RUN npm install
+RUN npm ci --production
 
 # Copy the project
 COPY . .
