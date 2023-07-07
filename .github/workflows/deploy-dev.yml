@@ -40,7 +40,7 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: asset-mappr
-          SHORT_SHA: $({{ github.sha }} | cut -c 1-7)
+          SHORT_SHA: '${{ github.sha }} | cut -c 1-7'
           IMAGE_TAG: "FE-DEV-${{ env.SHORT_SHA }}"
         run: |
           cd simple-app
