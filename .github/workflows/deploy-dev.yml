@@ -1,4 +1,4 @@
-name: Stage - Deploy to EC2
+name: Development - Deploy to EC2
 
 on:
   push:
@@ -32,7 +32,8 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: asset-mappr
-          IMAGE_TAG: "${{ github.sha }} | cut -c 1-7"
+          SHORT_SHA: "${{ github.sha }} | cut -c 1-7"
+          IMAGE_TAG: "FE-DEV-$SHORT_SHA"
         run: |
           cd simple-app
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
