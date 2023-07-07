@@ -31,6 +31,10 @@ jobs:
       - name: Deployment version
         run: |
           echo "Deploying version: ${{ github.sha }}"
+          
+      - name: Set Short SHA
+        id: vars
+        run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       
       - name: Login to Amazon ECR
         id: login-ecr
@@ -40,10 +44,8 @@ jobs:
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.ECR_REPO }}
-          SHORT_SHA: $(${{ github.sha }} | cut -c 1-7)
-          IMAGE_TAG: "FE-DEV-${{ github.sha }}"
+          IMAGE_TAG: "FE-DEV-${{ steps.vars.outputs.sha_short }}"
         run: |
-          cd simple-app    
-          echo "FE-DEV-${{ env.SHORT_SHA }}"      
+          cd simple-app          
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
