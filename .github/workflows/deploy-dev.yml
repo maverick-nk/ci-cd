@@ -43,6 +43,7 @@ jobs:
           SHORT_SHA: "${{ github.sha }} | cut -c 1-7"
           IMAGE_TAG: "FE-DEV-${{ env.SHORT_SHA }}"
         run: |
-          cd simple-app          
+          cd simple-app    
+          echo "${{ env.IMAGE_TAG }}"      
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
