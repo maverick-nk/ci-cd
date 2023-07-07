@@ -1,9 +1,9 @@
-name: Stage - Deploy to EC2
+name: Dev - Deploy to EC2
 
 on:
   push:
     branches:
-      - 'release/stg/**'
+      - 'release/dev/**'
       - 'main'
 
 jobs:
@@ -31,10 +31,14 @@ jobs:
           aws ecr get-login-password --region ${{ vars.AWS_REGION }} | docker login --username AWS --password-stdin ${{ vars.ECR_REPO_URL }}
   
 
-      - name: Build and push Docker image
+      - name: Build, tag, and push Docker image to Amazon ECR
+        env:
+          REGISTRY: ${{ steps.login-ecr.outputs.registry }}
+          REPOSITORY: asset-mappr
+          SHORT_SHA: "${{ github.sha }} | cut -c 1-7"
+          IMAGE_TAG: "FE-DEV-$SHORT_SHA"
         run: |          
           cd simple-app
           SHORT_SHA=$(echo ${{ github.sha }} | cut -c 1-7)
-          docker build -t "${{ vars.ECR_REPO }}:FE_$SHORT_SHA" .
-          docker tag "${{ vars.ECR_REPO }}:FE_$SHORT_SHA" "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:FE_$SHORT_SHA"
-          docker push "${{ vars.ECR_REPO_URL }}/${{ vars.ECR_REPO }}:FE_$SHORT_SHA"
+          docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
+          docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG

@@ -17,3 +17,4 @@ jobs:
         run: |
           echo "Pre-release, exiting!"
           exit 0
+        # TO-DO: Decide on ECS or Single instance deployment, and continue
