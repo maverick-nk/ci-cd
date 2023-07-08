@@ -55,7 +55,7 @@ jobs:
       
       - name: Deploy container to Amazon EC2
         env:
-          CONTAINER: "FE-DEV-CONT-${{ steps.vars.outputs.sha_short }}"
+          CONTAINER: "FE-DEV-CONTAINER"
           IMAGE: ${{ steps.build-image.outputs.image }}
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
           HOSTNAME : ${{ secrets.AWS_EC2_HOST  }}
@@ -64,9 +64,8 @@ jobs:
           echo "Deploying image: $IMAGE"
           echo "$PRIVATE_KEY" > private_key && chmod 600 private_key
           # Copy enviroment variabes
-          echo "$CONTAINER" > env_vars
-          echo "$IMAGE" >> env_vars
-          scp -o StrictHostKeyChecking=no -i private_key env_vars ${USER_NAME}@${HOSTNAME}:~/.ssh/environment
+          env | grep -E 'CONTAINER|IMAGE' > env_vars.txt
+          scp -o StrictHostKeyChecking=no -i private_key env_vars.txt ${USER_NAME}@${HOSTNAME}:
           # Connect to your EC2 instance via SSH and run Docker commands          
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
             echo "In instance, deploying: $IMAGE"
