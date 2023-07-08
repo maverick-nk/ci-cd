@@ -53,6 +53,14 @@ jobs:
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
           echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
       
-      - name: Deploy image on Amazon EC2
+      - name: Deploy container to Amazon EC2
+        env:
+          CONTAINER: "FE-DEV-CONT-${{ steps.vars.outputs.sha_short }}"
+          IMAGE: ${{ steps.build-image.outputs.image }}
         run: |
-          echo "Deploying image: ${{ steps.build-image.outputs.image }}"
+          echo "Deploying image: $IMAGE"
+          # Connect to your EC2 instance via SSH and run Docker commands
+          ssh ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} 'docker stop $CONTAINER || true'
+          ssh ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} 'docker rm $CONTAINER || true'
+          ssh ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} 'docker pull $IMAGE'
+          ssh ${{ secrets.AWS_EC2_USER }}@${{ secrets.AWS_EC2_HOST }} 'docker run -d --name $CONTAINER -p 80:80 $IMAGE'
