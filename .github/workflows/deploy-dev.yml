@@ -68,6 +68,7 @@ jobs:
           scp -o StrictHostKeyChecking=no -i private_key env_vars.txt ${USER_NAME}@${HOSTNAME}:
           # Connect to your EC2 instance via SSH and run Docker commands          
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
+            source env_vars.txt
             echo "In instance, deploying: $IMAGE"
             docker stop $CONTAINER || true
             docker rm $CONTAINER || true
