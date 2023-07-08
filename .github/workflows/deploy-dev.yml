@@ -3,7 +3,7 @@ name: Development - Deploy to EC2
 on:
   push:
     branches:
-      - 'release/stg/**'
+      - 'release/dev/**'
       - 'main'
 
 # Permission can be added at job level or workflow level    
@@ -42,12 +42,17 @@ jobs:
         uses: aws-actions/amazon-ecr-login@v1
 
       - name: Build, tag, and push Docker image to Amazon ECR
+        id: build-image
         env:
           REGISTRY: ${{ steps.login-ecr.outputs.registry }}
           REPOSITORY: ${{ vars.ECR_REPO }}
           IMAGE_TAG: "FE-DEV-${{ steps.vars.outputs.sha_short }}"
         run: |
-          echo "image_tag=$(IMAGE_TAG)" >> $GITHUB_OUTPUT
           cd simple-app          
           docker build -t $REGISTRY/$REPOSITORY:$IMAGE_TAG .
           docker push $REGISTRY/$REPOSITORY:$IMAGE_TAG
+          echo "image=$REGISTRY/$REPOSITORY:$IMAGE_TAG" >> $GITHUB_OUTPUT
+      
+      - name: EC2 instance deploy
+        run: |
+          echo "Deploying image: ${{ steps.vars.outputs.sha_short }}"
