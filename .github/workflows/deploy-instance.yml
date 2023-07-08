@@ -1,4 +1,4 @@
-name: Development - Deploy to EC2
+name: Deploy FE to EC2 - Development
 
 on:
   push:
@@ -25,7 +25,7 @@ jobs:
       - name: Deploy code to Amazon EC2 instance
         env:
           CONTAINER: "FE-DEV-CONTAINER"
-          IMAGE: "${{ vars.APP_NAME }}:${{ steps.vars.outputs.sha_short }}"
+          IMAGE: "${{ vars.APP_NAME }}-${{ steps.vars.outputs.sha_short }}:latest"
           APP: ${{ vars.APP_NAME }}
           PRIVATE_KEY: ${{ secrets.AWS_PRIVATE_KEY  }}
           HOSTNAME : ${{ secrets.AWS_EC2_HOST  }}
