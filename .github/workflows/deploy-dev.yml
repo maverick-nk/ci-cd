@@ -4,7 +4,6 @@ on:
   push:
     branches:
       - 'release/dev/**'
-      - 'main'
 
 # Permission can be added at job level or workflow level    
 permissions:
@@ -75,3 +74,4 @@ jobs:
             docker pull $IMAGE
             docker run -d --name $CONTAINER -p 80:80 $IMAGE
           '
+        # TODO: Find a way to authenticate instance to ecr.
