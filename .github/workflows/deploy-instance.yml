@@ -22,7 +22,7 @@ jobs:
         id: vars
         run: echo "sha_short=$(git rev-parse --short HEAD)" >> $GITHUB_OUTPUT
       
-      - name: Deploy code to Amazon EC2
+      - name: Deploy code to Amazon EC2 instance
         env:
           CONTAINER: "FE-DEV-CONTAINER"
           IMAGE: "${{ vars.APP_NAME }}:${{ steps.vars.outputs.sha_short }}"
