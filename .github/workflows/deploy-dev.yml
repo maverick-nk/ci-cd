@@ -66,10 +66,10 @@ jobs:
           # Copy enviroment variabes
           echo "$CONTAINER" > env_vars
           echo "$IMAGE" >> env_vars
-          scp env_vars -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME}:~/.ssh/environment
+          scp -o StrictHostKeyChecking=no -i private_key env_vars ${USER_NAME}@${HOSTNAME}:~/.ssh/environment
           # Connect to your EC2 instance via SSH and run Docker commands          
           ssh -o StrictHostKeyChecking=no -i private_key ${USER_NAME}@${HOSTNAME} '
-            echo "In instance, deploying: $(IMAGE) - $IMAGE"
+            echo "In instance, deploying: $IMAGE"
             docker stop $CONTAINER || true
             docker rm $CONTAINER || true
             docker pull $IMAGE
